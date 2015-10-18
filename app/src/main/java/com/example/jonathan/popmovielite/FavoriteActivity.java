@@ -1,14 +1,14 @@
 package com.example.jonathan.popmovielite;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 /**
  * Created by Jonathan on 10/10/2015.
  */
-public class FavoriteActivity extends FragmentActivity {
+public class FavoriteActivity extends ActionBarActivity {
 
 
     @Override
@@ -31,7 +31,7 @@ public class FavoriteActivity extends FragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_fav, menu);
         return true;
     }
 

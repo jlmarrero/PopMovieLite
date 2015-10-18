@@ -15,9 +15,7 @@ import android.widget.GridView;
  * Created by Jonathan on 10/10/2015.
  */
 public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragment {
-    private Movie[] movies;
     private Movie[] mMovieArray;
-    private String[] moviePaths;
     private GridView gridView;
 
     @Override
@@ -64,7 +62,6 @@ public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragm
         private String backdrop_path;
         private String trailer_json;
         private String comments_json;
-
         private Movie[] movieArray;
 
         @Override
