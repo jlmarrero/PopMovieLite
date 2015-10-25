@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by Jonathan on 7/27/2015.
  */
-public class Movie implements Parcelable {
+public class Obj_Movie implements Parcelable {
     private String id;
     private String title;
     private String popularity;
@@ -18,7 +18,7 @@ public class Movie implements Parcelable {
     private String trailer_json;
     private String comments_json;
 
-    public Movie(String id, String tit, String pop, String desc, String image, String vote, String release, String backdrop, String trailer_json, String comments_json) {
+    public Obj_Movie(String id, String tit, String pop, String desc, String image, String vote, String release, String backdrop, String trailer_json, String comments_json) {
         this.id = id;
         this.title = tit;
         this.popularity = pop;
@@ -47,7 +47,7 @@ public class Movie implements Parcelable {
         this.comments_json = comments_json;
     }
 
-    private Movie(Parcel in){
+    private Obj_Movie(Parcel in){
         id = in.readString();
         title = in.readString();
         popularity = in.readString();
@@ -143,15 +143,15 @@ public class Movie implements Parcelable {
         out.writeString(comments_json);
     }
 
-    public static final Creator<Movie> CREATOR = new Creator<Movie>(){
+    public static final Creator<Obj_Movie> CREATOR = new Creator<Obj_Movie>(){
         @Override
-        public Movie createFromParcel(Parcel parcel){
-            return new Movie(parcel);
+        public Obj_Movie createFromParcel(Parcel parcel){
+            return new Obj_Movie(parcel);
         }
 
         @Override
-        public Movie[] newArray(int i){
-            return new Movie[i];
+        public Obj_Movie[] newArray(int i){
+            return new Obj_Movie[i];
         }
     };
 }

@@ -10,13 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 /**
  * Created by Jonathan on 10/10/2015.
  */
 public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragment {
-    private Movie[] mMovieArray;
     private GridView gridView;
+    private Obj_Movie[] objMovieArray;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,6 @@ public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragm
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_grid_view, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
 
@@ -34,10 +34,10 @@ public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragm
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                Intent intent = new Intent(v.getContext(), DescriptionActivity.class);
+                Intent intent = new Intent(v.getContext(), Activity_Description.class);
                 Bundle b = new Bundle();
-                b.putParcelable("MOVIE", mMovieArray[position]);
-                Log.v("BYE BYE! ", "-----------> " + mMovieArray[position].getTitle());
+                b.putParcelable("MOVIE", objMovieArray[position]);
+                Log.v("BYE BYE! ", "-----------> " + objMovieArray[position].getTitle());
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -51,7 +51,7 @@ public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragm
     }
 
 
-    public class FetchMovieTask extends AsyncTask<Void, Movie[], Movie[]> {
+    public class FetchMovieTask extends AsyncTask<Void, Obj_Movie[], Obj_Movie[]> {
         private String id;
         private String title;
         private String popularity;
@@ -62,15 +62,14 @@ public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragm
         private String backdrop_path;
         private String trailer_json;
         private String comments_json;
-        private Movie[] movieArray;
 
         @Override
-        protected Movie[] doInBackground(Void... params) {
+        protected Obj_Movie[] doInBackground(Void... params) {
             MovieDatabaseHelper helper = new MovieDatabaseHelper(getActivity().getApplicationContext());
             Cursor cursor = helper.getAllData();
 
             while(cursor.moveToNext()) {
-                movieArray=new Movie[cursor.getCount()];
+                objMovieArray =new Obj_Movie[cursor.getCount()];
                 int i=0;
                 do{
                     id = cursor.getString(cursor.getColumnIndex("movie_id"));
@@ -84,29 +83,30 @@ public class Fragment_MovieFavoriteActivity extends android.support.v4.app.Fragm
                     trailer_json = cursor.getString(cursor.getColumnIndex("trailer_json"));;
                     comments_json = cursor.getString(cursor.getColumnIndex("comments_json"));;
 
-                    Movie movie = new Movie(id, title, popularity, description, poster_path, vote_average, release_date, backdrop_path,
+                    Obj_Movie objMovie = new Obj_Movie(id, title, popularity, description, poster_path, vote_average, release_date, backdrop_path,
                             trailer_json, comments_json);
 
-                    movieArray[i] = movie;
+                    objMovieArray[i] = objMovie;
 
                     i++;
                 }while(cursor.moveToNext());
 
             }
 
-        return movieArray;
+        return objMovieArray;
         }
 
         @Override
-        protected void onPostExecute(Movie[] result) {
-            mMovieArray = result;
-            String[] posterPathArray = new String[result.length];
-            for(int i=0;i<result.length;i++){
-                posterPathArray[i]=result[i].getPoster_path();
+        protected void onPostExecute(Obj_Movie[] result) {
+            if(result == null){
+                Toast.makeText(getActivity(), "You have not favorited any movies.", Toast.LENGTH_LONG).show();
+            }else{
+                String[] posterPathArray = new String[result.length];
+                for(int i=0;i<result.length;i++){
+                    posterPathArray[i]=result[i].getPoster_path();
+                }
+                gridView.setAdapter(new Adapter_GridActivity(getActivity(), posterPathArray));
             }
-            gridView.setAdapter(new ImageAdapter(getActivity(), posterPathArray));
-
-
         }
     }
 }

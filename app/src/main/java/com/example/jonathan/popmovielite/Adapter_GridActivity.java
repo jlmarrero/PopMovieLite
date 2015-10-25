@@ -12,15 +12,15 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by Jonathan on 7/27/2015.
  */
-public class ImageAdapter extends BaseAdapter {
+public class Adapter_GridActivity extends BaseAdapter {
     private Context mContext;
     private String[] mUrls;
     private ImageView imageView;
 
-    public ImageAdapter(Context c, String[] arrays) {
+    public Adapter_GridActivity(Context c, String[] arrays) {
         mContext = c;
         mUrls = arrays;
-        imageView = new ImageView(c);
+        imageView = new ImageView(mContext);
     }
 
     public int getCount() {

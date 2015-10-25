@@ -1,44 +1,40 @@
 package com.example.jonathan.popmovielite;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-/**
- * Created by Jonathan on 10/10/2015.
- */
-public class DescriptionActivity extends ActionBarActivity {
+
+public class Activity_Main extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_description);
+        setContentView(R.layout.activity_main);
 
-        if (findViewById(R.id.fragment_container_description) != null) {
+        if (findViewById(R.id.fragment_container_main) != null) {
 
             if (savedInstanceState != null) {
                 return;
             }
 
-            Fragment_MovieDescriptionActivity firstFragment = new Fragment_MovieDescriptionActivity();
-            Fragment_MovieTrailersActivity secondFragment = new Fragment_MovieTrailersActivity();
-            Fragment_MovieCommentsActivity thirdFragment = new Fragment_MovieCommentsActivity();
+
+            Fragment_MovieGridActivity firstFragment = new Fragment_MovieGridActivity();
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
-            // firstFragment.setArguments(getIntent().getExtras().getBundle("MOVIE"));
+            firstFragment.setArguments(getIntent().getExtras());
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container_description, firstFragment, "my first fragement").commit();
-                    //.add(R.id.fragment_container_trailers, secondFragment, "my second fragment")
-                    //.add(R.id.fragment_container_comments, thirdFragment, "my third fragment").commit();
+                    .add(R.id.fragment_container_main, firstFragment, "my fragement").commit();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_desc, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -53,7 +49,16 @@ public class DescriptionActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_favorite) {
+            Intent intent = new Intent(getApplicationContext(), Activity_Favorite.class);
+            startActivity(intent);
+        return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
+
+

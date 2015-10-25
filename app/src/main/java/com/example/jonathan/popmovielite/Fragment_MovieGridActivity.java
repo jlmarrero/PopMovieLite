@@ -1,6 +1,5 @@
 package com.example.jonathan.popmovielite;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,13 +26,10 @@ import java.net.URL;
  * Created by Jonathan on 10/10/2015.
  */
 public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment {
-    private Context mContext = getActivity();
-    private GridView mGridView;
-    private int[] mUrls = new int[20];
-    private Movie[] movies;
-    private Movie[] mMovieArray;
+    private Obj_Movie[] movies;
+    private Obj_Movie[] mObjMovieArray;
     private String[] moviePaths;
-    private ImageAdapter imageAdapter;
+    private Adapter_GridActivity imageAdapter;
     // preference variable
     private String Pref;
     private HttpURLConnection urlConnection = null;
@@ -56,7 +52,7 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
             view = inflater.inflate(R.layout.fragment_grid_view, container, false);
             gridView = (GridView) view.findViewById(R.id.gridview);
         } else {
-            movies = (Movie[]) savedInstanceState.getParcelableArray("Movies");
+            movies = (Obj_Movie[]) savedInstanceState.getParcelableArray("Movies");
             String[] urlArray = new String[movies.length];
 
             for (int i = 0; i < movies.length; i++) {
@@ -65,31 +61,19 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
 
             view = inflater.inflate(R.layout.fragment_grid_view, container, false);
             gridView = (GridView) view.findViewById(R.id.gridview);
-            ImageAdapter adapter = new ImageAdapter(getActivity(), urlArray);
-            gridView.setAdapter(adapter);
+            imageAdapter = new Adapter_GridActivity(getActivity(), urlArray);
+            gridView.setAdapter(imageAdapter);
         }
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                Intent intent = new Intent(v.getContext(), DescriptionActivity.class);
+                Intent intent = new Intent(v.getContext(), Activity_Description.class);
                 Bundle b = new Bundle();
                 b.putParcelable("MOVIE", movies[position]); // Log.v("BYE BYE! ", "-----------> " + movies[position].getTitle());
                 intent.putExtras(b);
                 startActivity(intent);
-
-                /*
-                Bundle b = new Bundle();
-                b.putParcelable("MOVIE", movies[position]);
-                Fragment_MovieDescriptionActivity fd = new Fragment_MovieDescriptionActivity();
-                fd.setArguments(b);
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container_main,fd);
-                ft.show(getFragmentManager().findFragmentById(R.id.fragment_container_main));
-                ft.addToBackStack(null);
-                ft.commit();
-                */
             }
         });
         return view;
@@ -110,13 +94,12 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
     }
 
 
-    public class FetchMovieTask extends AsyncTask<Void, Movie[], Movie[]> {
+    public class FetchMovieTask extends AsyncTask<Void, Obj_Movie[], Obj_Movie[]> {
 
         @Override
-        protected Movie[] doInBackground(Void... params) {
-            HttpURLConnection urlConnection = null;
+        protected Obj_Movie[] doInBackground(Void... params) {
             BufferedReader reader = null;
-            String movieJsonStr = null;
+            String movieJsonStr;
 
             try {
                 Uri buildUri = Uri.parse(getString(R.string.BASE_URL_MOVIE)).buildUpon()
@@ -179,15 +162,15 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
         return movies;
         }
 
-        private Movie[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
+        private Obj_Movie[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
 
             JSONObject jData = new JSONObject(movieJsonStr);
             JSONArray jArray = jData.getJSONArray("results");
 
             String[] ids = new String[jArray.length()];
-            movies = new Movie[jArray.length()];
+            movies = new Obj_Movie[jArray.length()];
             moviePaths = new String[jArray.length()];
-            mMovieArray = new Movie[jArray.length()];
+            mObjMovieArray = new Obj_Movie[jArray.length()];
 
             String trailer_json = "";
             String reviews_json = "";
@@ -195,10 +178,10 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
             // Grab ids for us in pulling complete (Youtube source, comments) JSON
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject jActualMovie = jArray.getJSONObject(i);
-                String id = jActualMovie.getString("id"); // Log.v("Movie ID: ", id);
+                String id = jActualMovie.getString("id"); // Log.v("Obj_Movie ID: ", id);
                 ids[i] = id;
             }
-            // Call for movie JSON that includes Trailer and Commment information
+            // Call for movie JSON that includes Obj_Trailer and Commment information
             for (int i = 0; i < jArray.length(); i++) {
                 trailer_json = getMovieTrailerJson(ids[i]); // this string contains the JSON that includes Youtube source id
                 // Log.v("COMPLETE JSON: ", trailer_json);
@@ -206,13 +189,9 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
                 JSONObject jRawData = new JSONObject(trailer_json);
                 JSONObject jTrailer = jRawData.getJSONObject("trailers");
                 JSONObject jReviews = jRawData.getJSONObject("reviews");
-                JSONArray jTrailerArray = jTrailer.getJSONArray("youtube");
-                JSONArray jReviewsArray = jReviews.getJSONArray("results");
 
-                // I will store my Trailer and Comments JSON as strings, then
-                // will turn the String into a JSONObject for parsing
-                trailer_json = jTrailerArray.toString(); // Log.v("TRAILER JSONArray: ", jTrailerArray.toString());
-                reviews_json = jReviewsArray.toString(); // Log.v("REVIEWS JSONArray: ", jReviewsArray.toString());
+                trailer_json = jTrailer.toString(); // Log.v("TRAILER JSONArray: ", jTrailerArray.toString());
+                reviews_json = jReviews.toString(); // Log.v("REVIEWS JSONArray: ", jReviewsArray.toString());
 
                 String id = jRawData.getString("id");
                 String title = jRawData.getString("title");
@@ -237,15 +216,15 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
                 String overview = jRawData.getString("overview");
                 String vote_average = jRawData.getString("vote_average");
 
-                Movie m = new Movie(id, title, popularity, overview, posterPath,
+                Obj_Movie m = new Obj_Movie(id, title, popularity, overview, posterPath,
                         vote_average, release, backdropPath, trailer_json, reviews_json);
-                mMovieArray[i] = m;
+                mObjMovieArray[i] = m;
             }
 
-            if (mMovieArray == null) {
+            if (mObjMovieArray == null) {
                 return null;
             } else {
-                return mMovieArray;
+                return mObjMovieArray;
             }
         }
 
@@ -283,9 +262,6 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
                     buffer.append(line + "\n");
                 }
 
@@ -315,7 +291,7 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
         }
 
         @Override
-        protected void onPostExecute(Movie[] result) {
+        protected void onPostExecute(Obj_Movie[] result) {
             moviePaths = new String[result.length];
 
             if (result != null) {
@@ -323,7 +299,7 @@ public class Fragment_MovieGridActivity extends android.support.v4.app.Fragment 
                 for (int i = 0; i < movies.length; i++) {
                     moviePaths[i] = movies[i].getPoster_path();
                 }
-                gridView.setAdapter(new ImageAdapter(getActivity(), moviePaths));
+                gridView.setAdapter(new Adapter_GridActivity(getActivity(), moviePaths));
             }
         }
     }

@@ -15,7 +15,10 @@
     <string name="pref_sync_keytwo">Choose your preference:</string>
     <string name="pref_order">pref_order</string>
     <string name="year_param">2015</string>
+
     <string name="api_key"></string>
+    <string name="YT_API"></string>
+
     <string name="primary_release_year">primary_release_year</string>
     <string name="search_country_param">us</string>
     <string name="cert_country">certification_country</string>

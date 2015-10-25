@@ -1,13 +1,14 @@
 package com.example.jonathan.popmovielite;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
-public class MainActivity extends ActionBarActivity {
+/**
+ * Created by Jonathan on 10/10/2015.
+ */
+public class Activity_Favorite extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,21 +21,16 @@ public class MainActivity extends ActionBarActivity {
                 return;
             }
 
-
-            Fragment_MovieGridActivity firstFragment = new Fragment_MovieGridActivity();
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            firstFragment.setArguments(getIntent().getExtras());
-            // Add the fragment to the 'fragment_container' FrameLayout
+            Fragment_MovieFavoriteActivity faveFragment = new Fragment_MovieFavoriteActivity();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container_main, firstFragment, "my fragement").commit();
+                    .add(R.id.fragment_container_main, faveFragment, "favorites").commit();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_fav, menu);
         return true;
     }
 
@@ -49,16 +45,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_favorite) {
-            Intent intent = new Intent(getApplicationContext(), FavoriteActivity.class);
-            startActivity(intent);
-        return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }
-
-

@@ -17,20 +17,20 @@ public class MovieDatabaseHelper {
         helper = new MovieHelper(context);
     }
 
-    public long insertData(Movie movie){
+    public long insertData(Obj_Movie objMovie){
         ContentValues contentValues = new ContentValues();
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        contentValues.put(helper.MOVIE_ID, movie.getId());
-        contentValues.put(helper.TITLE, movie.getTitle());
-        contentValues.put(helper.POPULARITY, movie.getPopularity());
-        contentValues.put(helper.RELEASE_DATE, movie.getRelease_date());
-        contentValues.put(helper.VOTE_AVERAGE, movie.getVote_average());
-        contentValues.put(helper.DESCRIPTION, movie.getDescription());
-        contentValues.put(helper.POSTER_PATH, movie.getPoster_path());
-        contentValues.put(helper.BACKDROP, movie.getBackdrop_path());
-        contentValues.put(helper.TRAILER_JSON, movie.getTrailer_json());
-        contentValues.put(helper.COMMENTS_JSON, movie.getComments_json());
+        contentValues.put(helper.MOVIE_ID, objMovie.getId());
+        contentValues.put(helper.TITLE, objMovie.getTitle());
+        contentValues.put(helper.POPULARITY, objMovie.getPopularity());
+        contentValues.put(helper.RELEASE_DATE, objMovie.getRelease_date());
+        contentValues.put(helper.VOTE_AVERAGE, objMovie.getVote_average());
+        contentValues.put(helper.DESCRIPTION, objMovie.getDescription());
+        contentValues.put(helper.POSTER_PATH, objMovie.getPoster_path());
+        contentValues.put(helper.BACKDROP, objMovie.getBackdrop_path());
+        contentValues.put(helper.TRAILER_JSON, objMovie.getTrailer_json());
+        contentValues.put(helper.COMMENTS_JSON, objMovie.getComments_json());
 
         long dbCheck = db.insert(helper.TABLE_NAME, null, contentValues);
         db.close();

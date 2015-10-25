@@ -3,10 +3,10 @@ package com.example.jonathan.popmovielite;
 /**
  * Created by Jonathan on 9/25/2015.
  */
-public class Comment {
-    private static String mAuthor;
-    private static String mComment;
-    public Comment(String author, String comment){
+public class Obj_Comment {
+    private String mAuthor;
+    private String mComment;
+    public Obj_Comment(String author, String comment){
         mAuthor = author;
         mComment = comment;
     }
@@ -16,7 +16,7 @@ public class Comment {
     }
 
     public void setmComment(String mComment) {
-        Comment.mComment = mComment;
+        mComment = mComment;
     }
 
     public String getmAuthor() {
@@ -24,6 +24,6 @@ public class Comment {
     }
 
     public void setmAuthor(String mAuthor) {
-        Comment.mAuthor = mAuthor;
+        mAuthor = mAuthor;
     }
 }
